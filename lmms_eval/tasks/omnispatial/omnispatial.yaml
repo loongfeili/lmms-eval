@@ -1,0 +1,50 @@
+# OmniSpatial: Comprehensive Spatial Reasoning Benchmark for Vision Language Models
+# Dataset covers 4 main dimensions: Dynamic Reasoning, Spatial Interaction, Complex Logic, Perspective Taking
+dataset_path: json
+dataset_kwargs:
+  data_files: /opt/data/private/llf/3dmllm/lmms-eval/qizekun/OmniSpatial/data.json
+task: omnispatial
+test_split: train
+output_type: generate_until
+doc_to_visual: !function utils.omnispatial_doc_to_visual
+doc_to_text: !function utils.omnispatial_doc_to_text
+doc_to_target: !function utils.omnispatial_doc_to_target
+generation_kwargs:
+  max_new_tokens: 10000
+  temperature: 0
+  top_p: 1.0
+  num_beams: 1
+  do_sample: false
+process_results: !function utils.omnispatial_process_results
+metric_list:
+  - metric: omnispatial_detailed
+    aggregation: !function utils.omnispatial_aggregate_detailed_results
+    higher_is_better: true
+lmms_eval_specific_kwargs:
+  default:
+    pre_prompt: |
+        You are a spatial-reasoning assistant.
+
+        Task
+        -----
+        You will receive  
+        1. **Image** - a single RGB frame depicting a scene.  
+        2. **Question** - a natural-language query about spatial relationships between objects in the image.  
+        3. **Options** - ≥2 answer candidates, each tagged by a capital letter (A, B, C, D…).
+
+        Guidelines
+        ----------
+        Please follow these steps to analyze the image and answer the question:
+        1. First, carefully observe the image and identify all relevant objects and their spatial relationships.
+        2. Next, break down the question into key components that need to be addressed.
+        3. Think through the spatial reasoning step-by-step to arrive at your answer. It may be necessary to transfer perspective to better understand the scene.
+        4. Finally, select the most appropriate option (A, B, C, or D) based on your analysis.
+
+        Always ground your answer in the visual evidence; do not hallucinate unseen objects.
+        If uncertain, pick the most plausible option—never refuse or reply “insufficient information.”
+
+        End your answer with a separate line formatted exactly as:
+        Answer: X
+        where X ∈ {A, B, C, D}.
+metadata:
+  version: 0.1
