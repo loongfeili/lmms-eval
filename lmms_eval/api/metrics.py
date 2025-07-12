@@ -604,3 +604,27 @@ def aggregate_subtask_metrics(metrics, sizes, weight_by_size=True):
     assert len(metrics) == len(sizes)
 
     return sum([metric * size for metric, size in zip(metrics, sizes)]) / sum(sizes)
+
+
+@register_metric(
+    metric="total_distance",
+    higher_is_better=False,
+    output_type="generate_until",
+    aggregation="mean",
+)
+def total_distance_metric(items):
+    """
+    Calculate the total distance based on model outputs.
+    Each item in `items` should be a tuple (predicted_distance, actual_distance).
+
+    Args:
+        items (List[Tuple[float, float]]): A list of tuples where the first element is the predicted distance
+                                          and the second element is the actual distance.
+
+    Returns:
+        float: The total distance error.
+    """
+    total_error = 0.0
+    for predicted, actual in items:
+        total_error += abs(predicted - actual)
+    return total_error / len(items) if items else 0.0

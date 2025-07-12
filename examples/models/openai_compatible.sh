@@ -1,8 +1,8 @@
 # export http_proxy=http://127.0.0.1:7890
 # export https_proxy=http://127.0.0.1:7890
 MODEL="Qwen/Qwen2.5-VL-72B-Instruct"
-BENCHMARK="omnispatial"
-OUTPUT=${BENCHMARK}/${MODEL}_results.json
+BENCHMARK="visual_correspondence"
+OUTPUT=result/${BENCHMARK}/${MODEL}_results.json
 export OPENAI_API_KEY="sk-drcaiymsoxcpibagipqvrfcitgmbvgvzqcaqehqdudwntqtl"
 export OPENAI_API_BASE="https://api.siliconflow.cn/v1/"
 export HF_ENDPOINT="https://hf-mirror.com"

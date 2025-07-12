@@ -1,0 +1,21 @@
+dataset_path: json
+dataset_kwargs:
+  data_files: /opt/data/private/llf/3dmllm/lmms-eval/total_dist/total_distance_val.jsonl
+task: totaldist
+test_split: train
+output_type: generate_until
+doc_to_visual: !function utils.total_dist_doc_to_visual
+doc_to_text: !function utils.total_dist_doc_to_text
+doc_to_target: "gt_value"
+generation_kwargs:
+  max_new_tokens: 1000
+  temperature: 0
+  top_p: 1.0
+  num_beams: 1
+process_results: !function utils.total_dist_process_results
+metric_list:
+  - metric: total_distance_err
+    aggregation: mean
+    higher_is_better: false
+metadata:
+  version: 0.1

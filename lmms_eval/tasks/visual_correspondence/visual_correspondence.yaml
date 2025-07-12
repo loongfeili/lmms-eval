@@ -1,0 +1,29 @@
+dataset_path: json
+dataset_kwargs:
+  data_files: /opt/data/private/llf/3dmllm/lmms-eval/visual_correspondence_dot_2_multichoice/val_visual_correspondence_dot_2_multichoice.jsonl
+task: visual_correspondence
+test_split: train
+output_type: generate_until
+doc_to_visual: !function utils.visual_correspondence_doc_to_visual
+doc_to_text: !function utils.visual_correspondence_doc_to_text
+doc_to_target: "gt_value"
+generation_kwargs:
+  max_new_tokens: 10000
+  temperature: 0
+  top_p: 1.0
+  num_beams: 1
+  do_sample: false
+lmms_eval_specific_kwargs:
+  default:
+    pre_prompt: |
+        The result you output is a separate line according to: 
+        Answer: X
+        where X ∈ {A, B, C, D}.
+process_results: !function utils.visual_correspondence_process_results
+metric_list:
+  # - metric: acc
+  #   aggregation: !function utils.visual_correspondence_aggregate_detailed_results
+  #   higher_is_better: true
+  - metric: visual_correspondence_detailed
+    aggregation: !function utils.visual_correspondence_aggregate_detailed_results
+    higher_is_better: true
