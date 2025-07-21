@@ -105,6 +105,7 @@ def msr_aggregate_results(results):
 
     l2_category_avg_score = {}
     for l2_category, scores in l2_category_scores.items():
+        print(f"{l2_category}--Right: {sum(scores)} ALL: {len(scores)}")
         avg_score = sum(scores) / len(scores)
         l2_category_avg_score[l2_category] = avg_score
         eval_logger.info(f"{l2_category}: {avg_score:.2f}")

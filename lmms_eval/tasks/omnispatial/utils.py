@@ -89,6 +89,7 @@ def parse_omnispatial_answer(pred_text):
         return match.group(1).upper()
     
     # Default fallback
+    eval_logger.warning(f"Unrecognized prediction format: {pred_text}. Defaulting to 'A'.")
     return "A"
 
 

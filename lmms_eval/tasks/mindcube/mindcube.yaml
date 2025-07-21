@@ -1,0 +1,41 @@
+dataset_path: json
+dataset_kwargs:
+  data_files: /opt/data/private/llf/3dmllm/lmms-eval/eval_data/MindCube/data/prompts_json/general/MindCube_tinybench_raw_qa.json
+task: mindcube
+test_split: train
+output_type: generate_until
+doc_to_visual: !function utils.mindcube_doc_to_visual
+doc_to_text: !function utils.mindcube_doc_to_text
+doc_to_target: gt_answer
+generation_kwargs:
+  max_new_tokens: 10000
+  temperature: 0
+  top_p: 1.0
+  num_beams: 1
+  do_sample: false
+process_results: !function utils.mindcube_process_results
+metric_list:
+  - metric: accuracy
+    aggregation: !function utils.mindcube_aggregate_accuracy
+    higher_is_better: true
+  - metric: graph_metrics_around
+    aggregation: !function utils.mindcube_aggregate_graph_metrics
+    higher_is_better: true
+  - metric: graph_metrics_rotation
+    aggregation: !function utils.mindcube_aggregate_graph_metrics
+    higher_is_better: true
+  - metric: graph_metrics_translation
+    aggregation: !function utils.mindcube_aggregate_graph_metrics
+    higher_is_better: true
+  - metric: graph_metrics_among
+    aggregation: !function utils.mindcube_aggregate_graph_metrics
+    higher_is_better: true
+  - metric: graph_metrics_other
+    aggregation: !function utils.mindcube_aggregate_graph_metrics
+    higher_is_better: true
+  - metric: graph_metrics_average
+    aggregation: !function utils.mindcube_aggregate_graph_metrics_average
+    higher_is_better: true
+metadata:
+  version: 0.1
+

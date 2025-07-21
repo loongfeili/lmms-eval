@@ -2,7 +2,7 @@
 # Dataset covers 4 main dimensions: Dynamic Reasoning, Spatial Interaction, Complex Logic, Perspective Taking
 dataset_path: json
 dataset_kwargs:
-  data_files: /opt/data/private/llf/3dmllm/lmms-eval/qizekun/OmniSpatial/data.json
+  data_files: /opt/data/private/llf/3dmllm/lmms-eval/eval_data/qizekun/OmniSpatial/data.json
 task: omnispatial
 test_split: train
 output_type: generate_until
@@ -29,7 +29,7 @@ lmms_eval_specific_kwargs:
         -----
         You will receive  
         1. **Image** - a single RGB frame depicting a scene.  
-        2. **Question** - a natural-language query about spatial relationships between objects in the image.  
+        2. **Question** - a natural-language query about spatial relationships between objects in the image.
         3. **Options** - ≥2 answer candidates, each tagged by a capital letter (A, B, C, D…).
 
         Guidelines
