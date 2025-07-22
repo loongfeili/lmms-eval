@@ -255,7 +255,7 @@ def _extract_cognitive_map(cogmap_answer: str) -> Optional[Dict]:
         eval_logger.error(f"Error extracting cognitive map for item {item_id}: {e}")
         return None
     
-def _extract_grounded_cogmap(self, item: Dict) -> Optional[Dict]:
+def _extract_grounded_cogmap(item: Dict) -> Optional[Dict]:
     """Extract grounded cognitive map from item."""
     grounded_cogmap = item.get('grounded_cogmap')
     if isinstance(grounded_cogmap, str):

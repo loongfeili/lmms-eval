@@ -167,7 +167,7 @@ def omnispatial_aggregate_detailed_results(results):
     for task in [k for k in stats if k != "Total"]:
         if len(stats[task]["Total"]) > 0:
             task_acc = sum(stats[task]["Total"]) / len(stats[task]["Total"]) * 100
-            eval_logger.info(f"{task}: {task_acc:.2f}%")
+            print(f"{task}: {task_acc:.2f}% Correct / ALL : {sum(stats[task]['Total'])}/{len(stats[task]['Total'])}")
             for sub_task in stats[task]:
                 if sub_task != "Total" and len(stats[task][sub_task]) > 0:
                     sub_acc = sum(stats[task][sub_task]) / len(stats[task][sub_task]) * 100

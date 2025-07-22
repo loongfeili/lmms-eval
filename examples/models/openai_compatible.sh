@@ -2,7 +2,7 @@
 # export https_proxy=http://127.0.0.1:7890
 # MODEL="doubao-1.5-vision-pro-250328"
 MODEL="Qwen/Qwen2.5-VL-72B-Instruct"
-BENCHMARK="omnispatial"
+BENCHMARK=""
 OUTPUT=result/${BENCHMARK}/${MODEL}_results.json
 # export OPENAI_API_KEY="2a1bb43f-1716-4337-9e14-5a3e92eb95ea"
 # export OPENAI_API_BASE="https://ark.cn-beijing.volces.com/api/v3"

@@ -72,6 +72,9 @@ def mindcube_process_results(doc, results):
     if not extracted_answer:
         eval_logger.warning(f"No valid answer found in response: {cogmap_answer}")
     is_correct = extracted_answer == doc['gt_answer']
+    if is_correct:
+        cogmap_results['settings'][setting]['gen_cogmap_correct'] += 1
+        cogmap_results['gen_cogmap_correct'] += 1
 
     generated_cogmap = _extract_cognitive_map(cogmap_answer)
     grounded_cogmap = _extract_grounded_cogmap(doc)
@@ -127,7 +130,7 @@ def mindcube_aggregate_accuracy(results):
         return {"accuracy": 0.0, "total": 0}
     
     accuracy = total_correct / total_count
-    return {"accuracy": accuracy, "total": total_count}
+    return {"accuracy": accuracy, "correct": total_correct, "total": total_count}
 
 def mindcube_aggregate_graph_metrics_average(results):
     """Aggregate graph metrics results across all settings to compute overall averages"""
@@ -152,6 +155,8 @@ def mindcube_aggregate_graph_metrics_average(results):
     if not filtered_results:
         return {
             "accuracy": 0.0,
+            "correct": 0,
+            "total": 0,
             "parsable_json_rate": 0.0,
             "valid_format_rate": 0.0,
             "valid_graph_rate": 0.0,
@@ -182,6 +187,8 @@ def mindcube_aggregate_graph_metrics_average(results):
     
     return {
         "accuracy": correct_count / total_count,
+        "correct": correct_count,
+        "total": total_count,
         "parsable_json_rate": parsable_json_count / total_count,
         "valid_format_rate": valid_format_count / total_count,
         "valid_graph_rate": valid_graph_count / total_count,
@@ -200,6 +207,8 @@ def mindcube_aggregate_graph_metrics(results):
     if not results:
         return {
             "accuracy": 0.0,
+            "correct": 0,
+            "total": 0,
             "parsable_json_rate": 0.0,
             "valid_format_rate": 0.0,
             "valid_graph_rate": 0.0,
@@ -230,6 +239,8 @@ def mindcube_aggregate_graph_metrics(results):
     
     return {
         "accuracy": correct_count / total_count,
+        "correct": correct_count,
+        "total": total_count,
         "parsable_json_rate": parsable_json_count / total_count,
         "valid_format_rate": valid_format_count / total_count,
         "valid_graph_rate": valid_graph_count / total_count,

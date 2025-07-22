@@ -57,7 +57,7 @@ metric_list:
     aggregation: !function utils.msr_aggregate_results 
     higher_is_better: true
   - metric: average
-    aggregation: !function utils.msr_aggregate_results 
+    aggregation: !function utils.msr_aggregate_results_avg 
     higher_is_better: true
 
 metadata:

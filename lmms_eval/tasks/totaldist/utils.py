@@ -65,5 +65,6 @@ def total_dist_process_results(doc, results):
                 "prediction": pred_value,
                 "ground_truth": gt_value,
                 "abs_error": abs(pred_value - gt_value),
+                "relative_error": abs(pred_value - gt_value) / (gt_value if gt_value != 0 else 1)
             }
     }

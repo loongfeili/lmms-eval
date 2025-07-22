@@ -105,7 +105,30 @@ def msr_aggregate_results(results):
 
     l2_category_avg_score = {}
     for l2_category, scores in l2_category_scores.items():
-        print(f"{l2_category}--Right: {sum(scores)} ALL: {len(scores)}")
+        print(f"{l2_category}: Correct / ALL = { int(sum(scores)) } / {len(scores)}")
+        avg_score = sum(scores) / len(scores)
+        l2_category_avg_score[l2_category] = avg_score
+        eval_logger.info(f"{l2_category}: {avg_score:.2f}")
+
+    all_scores = [score for scores in l2_category_scores.values() for score in scores]
+    avg_score = sum(all_scores) / len(all_scores) if all_scores else 0.0
+    return avg_score
+
+def msr_aggregate_results_avg(results):
+    """
+    Args:
+        results: a list of values returned by process_results
+    Returns:
+        A score
+    """
+    l2_category_scores = defaultdict(list)
+    for result in results:
+        score = result["score"]
+        l2_category = result["l2_category"]
+        l2_category_scores[l2_category].append(score)
+
+    l2_category_avg_score = {}
+    for l2_category, scores in l2_category_scores.items():
         avg_score = sum(scores) / len(scores)
         l2_category_avg_score[l2_category] = avg_score
         eval_logger.info(f"{l2_category}: {avg_score:.2f}")
