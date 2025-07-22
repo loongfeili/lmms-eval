@@ -1,5 +1,7 @@
-dataset_path: chancharikm/camerabench_vqa_lmms_eval # The name of the dataset as listed by HF in the datasets Hub.
+dataset_path: /mnt/bn/xyxdata/data/3d_llm/mini_tree/CameraBench # The name of the dataset as listed by HF in the datasets Hub.
 dataset_kwargs:
+  local_files_only: True
+  load_from_disk: True
   token: True
   cache_dir: camerabench_vqa
   video: True

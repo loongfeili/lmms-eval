@@ -931,7 +931,8 @@ class ConfigurableTask(Task):
                 dataset_kwargs.pop("From_YouTube")
                 return
 
-            if "video" in dataset_kwargs and dataset_kwargs["video"]:
+            #NOTE: if local_files_only is True, suppose the video data is already downloaded, so we don't need to download it again.
+            if "video" in dataset_kwargs and dataset_kwargs["video"] and download_config.local_files_only==False:
                 hf_home = os.getenv("HF_HOME", "~/.cache/huggingface/")
                 hf_home = os.path.expanduser(hf_home)
                 cache_dir = dataset_kwargs["cache_dir"]
@@ -1043,7 +1044,7 @@ class ConfigurableTask(Task):
 
             if "create_link" in dataset_kwargs:
                 dataset_kwargs.pop("create_link")
-
+        
         if dataset_kwargs is not None and "load_from_disk" in dataset_kwargs and dataset_kwargs["load_from_disk"]:
             # using local task in offline environment, need to process the online dataset into local format via
             # `ds = load_datasets("lmms-lab/MMMU")`
