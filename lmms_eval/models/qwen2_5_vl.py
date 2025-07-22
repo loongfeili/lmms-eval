@@ -238,7 +238,7 @@ class Qwen2_5_VL(lmms):
                         first_frame = vr[0].asnumpy()
                         height, width = first_frame.shape[:2]
                         # max_pixels = height * width
-                        processed_visuals.append({"type": "video", "video": visual, "max_pixels": self.max_pixels, "min_pixels": self.min_pixels})
+                        processed_visuals.append({"type": "video", "video": visual, "max_pixels": self.max_pixels, "min_pixels": self.min_pixels, "max_num_frames": self.max_num_frames, "fps": self.fps})
                     elif isinstance(visual, Image.Image):  # Handle both single and multiple images
                         base64_image = visual.convert("RGB")
                         buffer = BytesIO()
