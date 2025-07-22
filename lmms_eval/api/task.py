@@ -931,7 +931,8 @@ class ConfigurableTask(Task):
                 dataset_kwargs.pop("From_YouTube")
                 return
 
-            if "video" in dataset_kwargs and dataset_kwargs["video"]:
+            #NOTE: if local_files_only is True, suppose the video data is already downloaded, so we don't need to download it again.
+            if "video" in dataset_kwargs and dataset_kwargs["video"] and download_config.local_files_only==False:
                 hf_home = os.getenv("HF_HOME", "~/.cache/huggingface/")
                 hf_home = os.path.expanduser(hf_home)
                 cache_dir = dataset_kwargs["cache_dir"]
@@ -1043,7 +1044,7 @@ class ConfigurableTask(Task):
 
             if "create_link" in dataset_kwargs:
                 dataset_kwargs.pop("create_link")
-
+        
         if dataset_kwargs is not None and "load_from_disk" in dataset_kwargs and dataset_kwargs["load_from_disk"]:
             # using local task in offline environment, need to process the online dataset into local format via
             # `ds = load_datasets("lmms-lab/MMMU")`
@@ -1056,38 +1057,6 @@ class ConfigurableTask(Task):
                 download_config=download_config,
                 **dataset_kwargs if dataset_kwargs is not None else {},
             )
-        # # MODIFIED BEGIN
-        # # 按照dataset中的task_type和sub_task_type进行整理，每类随机保留keep_num个样本
-        # import random
-        keep_num = 3
-        for split_name in self.dataset:
-            split_data = self.dataset[split_name]
-            self.dataset[split_name] = split_data.shuffle(seed=42).select(range(500))
-            # if 'task_type' in split_data.features and 'sub_task_type' in split_data.features:
-            #     type_groups = {}
-            #     for i, item in enumerate(split_data):
-            #         q_type = item['task_type']
-            #         sub_q_type = item['sub_task_type']
-            #         combined_type = (q_type, sub_q_type)
-            #         if combined_type not in type_groups:
-            #             type_groups[combined_type] = []
-            #         type_groups[combined_type].append(i)
-            
-            # selected_indices = []
-            # for combined_type, indices in type_groups.items():
-            #     if len(indices) > keep_num:
-            #         selected = random.sample(indices, keep_num)
-            #     else:
-            #         selected = indices
-            #     selected_indices.extend(selected)
-            #     eval_logger.info(f"Split '{split_name}', task_type '{combined_type[0]}', sub_task_type '{combined_type[1]}': 从 {len(indices)} 个样本中选择了 {len(selected)} 个")
-
-            # selected_indices.sort()
-            # self.dataset[split_name] = split_data.select(selected_indices)
-            
-            # eval_logger.info(f"Split '{split_name}': 按task_type和sub_task_type筛选后保留了 {len(selected_indices)} 个样本")
-            
-        # # MODIFIED END
 
         if self.config.process_docs is not None:
             for split in self.dataset:
