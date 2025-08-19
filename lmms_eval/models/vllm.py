@@ -174,7 +174,11 @@ class VLLM(lmms):
                                 all_tasks.append(executor.submit(self.encode_image, visual))
 
                         for task in all_tasks:
-                            imgs.append(task.result())
+                            task_done = task.result()
+                            if isinstance(task_done, list):
+                                imgs.extend(task_done)
+                            else :
+                                imgs.append(task_done)
 
                 messages = [{"role": "user", "content": []}]
                 # When there is no image token in the context, append the image to the text

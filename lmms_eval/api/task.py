@@ -1059,10 +1059,10 @@ class ConfigurableTask(Task):
         # # MODIFIED BEGIN
         # # 按照dataset中的task_type和sub_task_type进行整理，每类随机保留keep_num个样本
         # import random
-        keep_num = 3
-        for split_name in self.dataset:
-            split_data = self.dataset[split_name]
-            self.dataset[split_name] = split_data.shuffle(seed=42).select(range(500))
+        # keep_num = 3
+        # for split_name in self.dataset:
+        #     split_data = self.dataset[split_name]
+        #     self.dataset[split_name] = split_data.shuffle(seed=42).select(range(500))
             # if 'task_type' in split_data.features and 'sub_task_type' in split_data.features:
             #     type_groups = {}
             #     for i, item in enumerate(split_data):

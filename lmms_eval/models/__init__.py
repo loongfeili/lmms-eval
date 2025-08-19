@@ -43,6 +43,7 @@ AVAILABLE_MODELS = {
     "mplug_owl_video": "mplug_Owl",
     "ola": "Ola",
     "openai_compatible": "OpenAICompatible",
+    "batch_openai_compatible": "BatchOpenAICompatible",
     "oryx": "Oryx",
     "phi3v": "Phi3v",
     "phi4_multimodal": "Phi4",

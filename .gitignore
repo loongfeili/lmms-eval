@@ -56,3 +56,5 @@ total_dist/
 eval_data/
 test_result_w_small_sample/
 code
+result/
+.vscode/

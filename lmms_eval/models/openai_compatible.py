@@ -38,7 +38,7 @@ class OpenAICompatible(lmms):
         continual_mode: bool = False,
         response_persistent_folder: str = None,
         azure_openai: bool = False,
-        max_frames_num: int = 10,
+        max_frames_num: int = 16,
         **kwargs,
     ) -> None:
         super().__init__()
