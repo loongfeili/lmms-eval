@@ -123,7 +123,7 @@ class BatchOpenAICompatible(lmms):
         vr = VideoReader(video_path, ctx=cpu(0))
         total_frame_num = len(vr)
         uniform_sampled_frames = np.linspace(0, total_frame_num - 1, for_get_frames_num, dtype=int)
-
+        
         # Ensure the last frame is included
         if total_frame_num - 1 not in uniform_sampled_frames:
             uniform_sampled_frames = np.append(uniform_sampled_frames, total_frame_num - 1)
@@ -240,7 +240,7 @@ class BatchOpenAICompatible(lmms):
                         time.sleep(self.timeout)
         
         # Use ThreadPoolExecutor for concurrent API calls
-        with ThreadPoolExecutor(max_workers=min(len(payloads), 10)) as executor:
+        with ThreadPoolExecutor(max_workers=min(len(payloads), 1024)) as executor:
             future_to_index = {executor.submit(call_single_api, payload): i for i, payload in enumerate(payloads)}
             responses = [None] * len(payloads)
             
@@ -267,19 +267,42 @@ class BatchOpenAICompatible(lmms):
             cached_responses = []
             doc_uuids = []
             
-            # Process each request in the batch
-            for idx in range(len(batch_requests)):
-                contexts, gen_kwargs, doc_to_visual, doc_id, task, split = batch_requests[idx].arguments
+            # 并行处理批量请求
+            def process_single_request_wrapper(batch_request):
+                idx, request = batch_request
+                contexts, gen_kwargs, doc_to_visual, doc_id, task, split = request.arguments
                 payload, cached_response, doc_uuid = self.process_single_request(
                     contexts, gen_kwargs, doc_to_visual, doc_id, task, split
                 )
+                return idx, payload, cached_response, doc_uuid
+            
+            # 使用线程池并行处理
+            with ThreadPoolExecutor(max_workers=min(32, len(batch_requests))) as executor:
+                # 提交所有任务，保持索引映射
+                future_to_idx = {
+                    executor.submit(process_single_request_wrapper, (idx, request)): idx 
+                    for idx, request in enumerate(batch_requests)
+                }
                 
-                if cached_response is not None:
-                    # Use cached response
-                    cached_responses.append((idx, cached_response, doc_uuid))
-                else:
-                    # Need to call API
-                    payloads.append((idx, payload, doc_uuid))
+                # 收集结果，保持原始顺序
+                results = [None] * len(batch_requests)
+                for future in tqdm(as_completed(future_to_idx), total=len(batch_requests)):
+                    try:
+                        idx, payload, cached_response, doc_uuid = future.result()
+                        results[idx] = (payload, cached_response, doc_uuid)
+                    except Exception as exc:
+                        print(f'Request {future_to_idx[future]} generated an exception: {exc}')
+                        # 处理异常情况，保持顺序
+                        results[future_to_idx[future]] = (None, None, None)
+                
+                # 按原始顺序处理结果
+                for idx, (payload, cached_response, doc_uuid) in enumerate(results):
+                    if cached_response is not None:
+                        # Use cached response
+                        cached_responses.append((idx, cached_response, doc_uuid))
+                    else:
+                        # Need to call API
+                        payloads.append((idx, payload, doc_uuid))
             
             # Call API for non-cached requests
             batch_responses = [None] * len(batch_requests)
